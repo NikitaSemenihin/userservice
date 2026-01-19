@@ -14,17 +14,23 @@ import java.time.LocalDate;
 public class PaymentCard extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(name = "number")
     private String number;
+
+    @Column(name = "holder")
     private String holder;
 
+    @Column(name = "expiration_date")
     private LocalDate expirationDate;
 
+    @Column(name = "active")
     private boolean active;
 
     public Long getId() {
