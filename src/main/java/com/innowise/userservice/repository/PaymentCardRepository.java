@@ -1,4 +1,4 @@
-package com.innowise.userservice.dao;
+package com.innowise.userservice.repository;
 
 import com.innowise.userservice.model.entity.PaymentCard;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,13 +13,13 @@ import java.util.List;
 @Repository
 public interface PaymentCardRepository extends JpaRepository<PaymentCard, Long>,
         JpaSpecificationExecutor<PaymentCard> {
-    @Query("select c from PaymentCard c where c.user.id = :userId")
-    List<PaymentCard> findAllByUserId(@Param("userId") Long userId);
+    @Query("select c from PaymentCard c where c.user_id = :user_id")
+    List<PaymentCard> findAllByUserId(@Param("user_id") Long userId);
 
     @Modifying
     @Query(
             value = "update payment_cards set active = :active where id = :id",
             nativeQuery = true
     )
-    void updateActiveStatus(@Param("id") Long id, @Param("active") boolean active);
+    void updateActiveStatus(Long id, boolean active);
 }

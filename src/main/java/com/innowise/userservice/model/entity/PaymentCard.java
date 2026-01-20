@@ -5,32 +5,26 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(
-        name = "payment_cards",
-        indexes = {
-                @Index(name = "idx_payment_cards_user_id", columnList = "user_id")
-        }
-)
+@Table(name = "payment_cards")
 public class PaymentCard extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "number")
+    @Column(nullable = false, unique = true)
     private String number;
 
-    @Column(name = "holder")
+    @Column(nullable = false)
     private String holder;
 
-    @Column(name = "expiration_date")
+    @Column(name = "expiration_date", nullable = false)
     private LocalDate expirationDate;
 
-    @Column(name = "active")
+    @Column(nullable = false)
     private boolean active;
 
     public Long getId() {

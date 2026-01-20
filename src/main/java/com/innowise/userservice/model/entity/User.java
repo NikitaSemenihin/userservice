@@ -8,34 +8,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(
-        name = "users",
-        indexes = {
-                @Index(name = "idx_users_email", columnList = "email")
-        }
-)
+@Table(name = "users")
 public class User extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
+    @Column(nullable = false)
     private String name;
 
-    @Column(name = "surname")
+    @Column(name = "birth_date",nullable = false)
     private String surname;
 
-    @Column(name = "birthDate")
+    @Column(nullable = false)
     private LocalDate birthDate;
 
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(name = "active")
+    @Column(nullable = false)
     private boolean active;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private List<PaymentCard> paymentCards = new ArrayList<>();
 
     public User() {
