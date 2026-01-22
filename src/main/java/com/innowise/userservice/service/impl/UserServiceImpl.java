@@ -8,6 +8,8 @@ import com.innowise.userservice.repository.PaymentCardRepository;
 import com.innowise.userservice.repository.UserRepository;
 import com.innowise.userservice.service.UserService;
 import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -28,11 +30,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(value = "users", key = "#id")
     public User createUser(User user) {
         return userRepository.save(user);
     }
 
     @Override
+    @Cacheable(value = "users", key = "#id")
     public User findUser(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User with id: " + id + " Not Found")); //todo сделать {id}
@@ -44,6 +48,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvict(value = "users", key = "#id")
     public User updateUser(Long id, User user) {
         User updatedUser = findUser(id);
 
@@ -57,12 +62,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "users", key = "#id")
     public void updateUserStatus(Long id, boolean active) {
         userRepository.updateActiveStatus(id, active);
     }
 
     @Override
     @Transactional
+    @Cacheable(value = "userCards", key = "#userId")
     public PaymentCard addCard(Long userId, PaymentCard card) {
         User user = findUser(userId);
 
@@ -76,12 +83,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvict(value = {"users", "userCards"}, key = "#id")
     public List<PaymentCard> getUserCards(Long userId) {
         return cardRepository.findAllByUserId(userId);
     }
 
     @Override
     @Transactional
+    @CacheEvict(value = {"users", "userCards"}, allEntries = true)
     public void updateCardStatus(Long cardId, boolean active) {
         cardRepository.updateActiveStatus(cardId, active);
     }
