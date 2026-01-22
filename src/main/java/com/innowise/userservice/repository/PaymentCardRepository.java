@@ -13,8 +13,8 @@ import java.util.List;
 @Repository
 public interface PaymentCardRepository extends JpaRepository<PaymentCard, Long>,
         JpaSpecificationExecutor<PaymentCard> {
-    @Query("select c from PaymentCard c where c.user_id = :user_id")
-    List<PaymentCard> findAllByUserId(@Param("user_id") Long userId);
+    @Query("select c from PaymentCard c where c.user.id = :userId")
+    List<PaymentCard> findAllByUserId(Long userId);
 
     @Modifying
     @Query(

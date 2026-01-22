@@ -10,7 +10,7 @@ import java.time.Instant;
 
 @MappedSuperclass
 @EntityListeners(AuditableEntity.class)
-public class AuditableEntity {
+public abstract class AuditableEntity {
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)
