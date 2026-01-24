@@ -7,6 +7,7 @@ import com.innowise.userservice.model.entity.User;
 import com.innowise.userservice.repository.PaymentCardRepository;
 import com.innowise.userservice.repository.UserRepository;
 import com.innowise.userservice.service.UserService;
+import jakarta.annotation.Resource;
 import jakarta.transaction.Transactional;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -22,7 +23,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PaymentCardRepository cardRepository;
 
-    private final static int MAXIMUM_NUMBER_OF_CARDS = 5;
+    private static final int MAXIMUM_NUMBER_OF_CARDS = 5;
 
     public UserServiceImpl(UserRepository userRepository, PaymentCardRepository cardRepository) {
         this.userRepository = userRepository;
@@ -30,7 +31,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(value = "users", key = "#id")
+    @Transactional
     public User createUser(User user) {
         return userRepository.save(user);
     }
@@ -39,7 +40,7 @@ public class UserServiceImpl implements UserService {
     @Cacheable(value = "users", key = "#id")
     public User findUser(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User with id: " + id + " Not Found")); //todo сделать {id}
+                .orElseThrow(() -> new UserNotFoundException(String.format("User with id: %d Not Found", id)));
     }
 
     @Override
@@ -49,6 +50,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @CacheEvict(value = "users", key = "#id")
+    @Transactional
     public User updateUser(Long id, User user) {
         User updatedUser = findUser(id);
 

@@ -14,13 +14,13 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
 
     private final UserService service;
@@ -33,10 +33,19 @@ public class UserController {
         this.cardMapper = cardMapper;
     }
 
-    @PostMapping
+    @PostMapping(
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UserResponseDto> createUser(@Valid @RequestBody UserCreateDto dto) {
         User user = service.createUser(userMapper.toEntity(dto));
         return ResponseEntity.status(HttpStatus.CREATED).body(userMapper.toDto(user));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> findUser(@PathVariable Long id) {
+        return ResponseEntity.ok(service.findUser(id));
     }
 
     @GetMapping
