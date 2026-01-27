@@ -19,6 +19,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -39,32 +41,57 @@ public class UserController {
     )
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UserResponseDto> createUser(@Valid @RequestBody UserCreateDto dto) {
-        User user = service.createUser(userMapper.toEntity(dto));
-        return ResponseEntity.status(HttpStatus.CREATED).body(userMapper.toDto(user));
+        UserResponseDto responseDto = service.createUser(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> findUser(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDto> findUser(@PathVariable Long id) {
         return ResponseEntity.ok(service.findUser(id));
     }
 
     @GetMapping
-    public ResponseEntity<Page<UserResponseDto>> getUsers(@RequestParam(required = false) String name,
-                                                          @RequestParam(required = false) String surname,
-                                                          Pageable pageable) {
+    public ResponseEntity<Page<UserResponseDto>> findUsers(@RequestParam(required = false) String name,
+                                                           @RequestParam(required = false) String surname,
+                                                           Pageable pageable) {
         Specification<User> specification = Specification.allOf(
                 UserSpecification.hasName(name), UserSpecification.hasSurname(surname)
         );
 
-        Page<UserResponseDto> page = service.findUsers(specification, pageable).map(userMapper::toDto);
+        Page<UserResponseDto> page = service.findUsersWithSpecification(specification, pageable);
 
         return ResponseEntity.ok(page);
     }
 
-    @PostMapping("/{id}/cards")
-    public ResponseEntity<PaymentCardResponseDto> addCard(@PathVariable Long id,
+    @PostMapping("/{id}")
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @Valid @RequestBody UserCreateDto dto) {
+        UserResponseDto responseDto = service.updateUser(id, dto);
+        return ResponseEntity.ok().body(responseDto);
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Void> updateUserStatus(@PathVariable Long id, @RequestParam boolean active) {
+        service.updateUserStatus(id, active);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable Long id) {
+        service.deleteUser(id);
+    }
+
+    @PostMapping("/{userId}/cards")
+    public ResponseEntity<PaymentCardResponseDto> addCard(@PathVariable Long userId,
                                                           @Valid @RequestBody PaymentCardCreateDto dto) {
-        PaymentCard card = service.addCard(id, cardMapper.toEntity(dto));
-        return ResponseEntity.status(HttpStatus.CREATED).body(cardMapper.toDto(card));
+        PaymentCardResponseDto paymentCardResponseDto = service.addCard(userId, dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(paymentCardResponseDto);
+    }
+
+    @GetMapping("/{userId}/cards")
+    public ResponseEntity<List<PaymentCardResponseDto>> findUserCards(@PathVariable Long userId) {
+        List<PaymentCardResponseDto> cards =
+                service.findUserCards(userId);
+        return ResponseEntity.ok(cards);
     }
 }

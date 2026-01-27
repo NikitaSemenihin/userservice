@@ -1,7 +1,12 @@
 package com.innowise.userservice.model.dto.paymentcard;
 
+import lombok.*;
+
 import java.time.Instant;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PaymentCardResponseDto {
 
     private Long id;
@@ -22,41 +27,5 @@ public class PaymentCardResponseDto {
 
     public String getNumber() {
         return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
     }
 }

@@ -5,7 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public interface UserRepository
@@ -13,8 +16,10 @@ public interface UserRepository
 
     @Modifying
     @Query(
-            value = "update users set active = :active where id = :id",
+            value = "update User u set u.active = :active where u.id = :id",
             nativeQuery = true
     )
-    void updateActiveStatus(Long id, boolean active);
+    int updateActiveStatus(@Param("id") Long id, @Param("active") boolean active);
+
+    Optional<User> findByIdAndActiveTrue(Long id);
 }

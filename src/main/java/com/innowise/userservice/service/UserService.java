@@ -1,6 +1,9 @@
 package com.innowise.userservice.service;
 
-import com.innowise.userservice.model.entity.PaymentCard;
+import com.innowise.userservice.model.dto.paymentcard.PaymentCardCreateDto;
+import com.innowise.userservice.model.dto.paymentcard.PaymentCardResponseDto;
+import com.innowise.userservice.model.dto.user.UserCreateDto;
+import com.innowise.userservice.model.dto.user.UserResponseDto;
 import com.innowise.userservice.model.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,19 +13,25 @@ import java.util.List;
 
 public interface UserService {
 
-    User createUser(User user);
+    UserResponseDto createUser(UserCreateDto dto);
 
-    User findUser(Long id);
+    UserResponseDto findUser(Long id);
 
-    Page<User> findUsers(Specification<User> specification, Pageable pageable);
+    Page<UserResponseDto> findUsersWithSpecification(Specification<User> specification, Pageable pageable);
 
-    User updateUser(Long id, User user);
+    UserResponseDto updateUser(Long id, UserCreateDto dto);
 
     void updateUserStatus(Long id, boolean active);
 
-    PaymentCard addCard(Long userId, PaymentCard card);
+    void deleteUser(Long id);
 
-    List<PaymentCard> getUserCards(Long userId);
+    PaymentCardResponseDto addCard(Long userId, PaymentCardCreateDto dto);
+
+    PaymentCardResponseDto findCard(Long cardId);
+
+    List<PaymentCardResponseDto> findUserCards(Long userId);
 
     void updateCardStatus(Long cardId, boolean active);
+
+    void deleteCard(Long cardId);
 }

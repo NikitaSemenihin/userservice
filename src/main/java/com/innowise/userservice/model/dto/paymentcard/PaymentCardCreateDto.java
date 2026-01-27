@@ -2,9 +2,13 @@ package com.innowise.userservice.model.dto.paymentcard;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 import java.time.LocalDate;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PaymentCardCreateDto {
 
     @NotBlank
@@ -12,23 +16,4 @@ public class PaymentCardCreateDto {
 
     @NotNull
     private LocalDate expirationDate;
-
-    @NotNull
-    private Long userId;
-
-    public LocalDate getExpirationDate() {
-        return expirationDate;
-    }
-
-    public void setExpirationDate(LocalDate expirationDate) {
-        this.expirationDate = expirationDate;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
 }
