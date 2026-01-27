@@ -53,7 +53,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(value = "users", key = "#id")
+    @Cacheable(
+            value = "users",
+            key = "#id",
+            unless = "#result == null"
+    )
     public UserResponseDto findUser(Long id) {
         User user = userRepository.findByIdAndActiveTrue(id)
                 .orElseThrow(() -> new UserNotFoundException(String.format("User with id: %d Not Found", id)));
@@ -62,7 +66,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(value = "users", key = "#id")
+    @Cacheable(
+            value = "users",
+            key = "#id",
+            unless = "#result == null"
+    )
     public Page<UserResponseDto> findUsersWithSpecification(Specification<User> specification, Pageable pageable) {
 
         Specification<User> activeSpecification =
@@ -121,7 +129,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    @CacheEvict( value = "userCards", key = "#userId")
+    @CacheEvict(value = "userCards", key = "#userId")
     public PaymentCardResponseDto addCard(Long userId, PaymentCardCreateDto dto) {
         User user = userRepository.findByIdAndActiveTrue(userId)
                 .orElseThrow(() -> new UserNotFoundException(
@@ -141,13 +149,17 @@ public class UserServiceImpl implements UserService {
         card.setActive(true);
         user.getPaymentCards().add(card);
 
-        PaymentCard saved =  cardRepository.save(card);
+        PaymentCard saved = cardRepository.save(card);
 
         return cardMapper.toDto(saved);
     }
 
     @Override
-    @CacheEvict(value = "userCards", key = "#userId")
+    @Cacheable(
+            value = "userCards",
+            key = "#userId",
+            unless = "#result == null"
+    )
     public List<PaymentCardResponseDto> findUserCards(Long userId) {
         if (!userRepository.existsById(userId)) {
             throw new UserNotFoundException(String.format("User with id: %d not found", userId));
@@ -159,7 +171,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @CacheEvict(value = "userCards", key = "#userId")
+    @Cacheable(
+            value = "userCards",
+            key = "#userId",
+            unless = "#result == null"
+    )
     public PaymentCardResponseDto findCard(Long cardId) {
         PaymentCard card = cardRepository.findByIdAndActiveTrue(cardId)
                 .orElseThrow(() -> new CardNotFoundException(String.format("User with id: %d Not Found", cardId)));
