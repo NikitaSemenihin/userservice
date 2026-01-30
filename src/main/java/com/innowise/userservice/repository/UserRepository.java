@@ -16,8 +16,7 @@ public interface UserRepository
 
     @Modifying
     @Query(
-            value = "update User u set u.active = :active where u.id = :id",
-            nativeQuery = true
+            value = "update User u set u.active = :active where u.id = :id"
     )
     int updateActiveStatus(@Param("id") Long id, @Param("active") boolean active);
 

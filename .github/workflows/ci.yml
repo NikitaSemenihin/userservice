@@ -34,6 +34,3 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean install --batch-mode
-
-      - name: Run tests
-        run: mvn test

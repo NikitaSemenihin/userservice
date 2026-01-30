@@ -13,6 +13,6 @@ public class UserSpecification {
     public static Specification<User> hasSurname(String surname) {
         return (root, query, criteriaBuilder) ->
                 surname == null ? null :
-                        criteriaBuilder.equal(root.get(surname), surname);
+                        criteriaBuilder.equal(root.get("surname"), surname);
     }
 }

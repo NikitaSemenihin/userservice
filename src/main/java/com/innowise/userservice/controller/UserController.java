@@ -1,12 +1,10 @@
 package com.innowise.userservice.controller;
 
-import com.innowise.userservice.mapper.PaymentCardMapper;
-import com.innowise.userservice.mapper.UserMapper;
+import com.innowise.userservice.model.dto.StatusDto;
 import com.innowise.userservice.model.dto.paymentcard.PaymentCardCreateDto;
 import com.innowise.userservice.model.dto.paymentcard.PaymentCardResponseDto;
 import com.innowise.userservice.model.dto.user.UserCreateDto;
 import com.innowise.userservice.model.dto.user.UserResponseDto;
-import com.innowise.userservice.model.entity.PaymentCard;
 import com.innowise.userservice.model.entity.User;
 import com.innowise.userservice.repository.specification.UserSpecification;
 import com.innowise.userservice.service.UserService;
@@ -26,13 +24,9 @@ import java.util.List;
 public class UserController {
 
     private final UserService service;
-    private final UserMapper userMapper;
-    private final PaymentCardMapper cardMapper;
 
-    public UserController(UserService service, UserMapper userMapper, PaymentCardMapper cardMapper) {
+    public UserController(UserService service) {
         this.service = service;
-        this.userMapper = userMapper;
-        this.cardMapper = cardMapper;
     }
 
     @PostMapping(
@@ -63,15 +57,15 @@ public class UserController {
         return ResponseEntity.ok(page);
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @Valid @RequestBody UserCreateDto dto) {
         UserResponseDto responseDto = service.updateUser(id, dto);
         return ResponseEntity.ok().body(responseDto);
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<Void> updateUserStatus(@PathVariable Long id, @RequestParam boolean active) {
-        service.updateUserStatus(id, active);
+    public ResponseEntity<Void> updateUserStatus(@PathVariable Long id, @RequestBody StatusDto dto) {
+        service.updateUserStatus(id, dto.isStatus());
         return ResponseEntity.noContent().build();
     }
 

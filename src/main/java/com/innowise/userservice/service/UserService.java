@@ -29,7 +29,11 @@ public interface UserService {
 
     PaymentCardResponseDto findCard(Long cardId);
 
+    Page<PaymentCardResponseDto> findActiveCards(Pageable pageable);
+
     List<PaymentCardResponseDto> findUserCards(Long userId);
+
+    PaymentCardResponseDto updateCard(Long id, PaymentCardCreateDto dto);
 
     void updateCardStatus(Long cardId, boolean active);
 
