@@ -150,11 +150,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(
-            value = "userCards",
-            key = "#userId",
-            unless = "#result == null"
-    )
     public List<PaymentCardResponseDto> findUserCards(Long userId) {
         if (!userRepository.existsById(userId)) {
             throw new UserNotFoundException(String.format("User with id: %d not found", userId));

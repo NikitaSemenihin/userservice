@@ -84,8 +84,7 @@ public class UserController {
 
     @GetMapping("/{userId}/cards")
     public ResponseEntity<List<PaymentCardResponseDto>> findUserCards(@PathVariable Long userId) {
-        List<PaymentCardResponseDto> cards =
-                service.findUserCards(userId);
+        List<PaymentCardResponseDto> cards = service.findUserCards(userId);
         return ResponseEntity.ok(cards);
     }
 }

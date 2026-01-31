@@ -1,7 +1,10 @@
 package com.innowise.userservice.model.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Setter
 @Getter
@@ -9,6 +12,5 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StatusDto {
-    @NotBlank
     private boolean status;
 }
