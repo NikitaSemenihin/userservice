@@ -31,7 +31,6 @@ public class PaymentCard extends AuditableEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore
     private User user;
 
     @Column(nullable = false, unique = true)

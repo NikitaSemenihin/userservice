@@ -63,7 +63,7 @@ public class UserController {
         return ResponseEntity.ok().body(responseDto);
     }
 
-    @PatchMapping("/{id}/status")
+    @PatchMapping("/{id}")
     public ResponseEntity<Void> updateUserStatus(@PathVariable Long id, @RequestBody StatusDto dto) {
         service.updateUserStatus(id, dto.isStatus());
         return ResponseEntity.noContent().build();

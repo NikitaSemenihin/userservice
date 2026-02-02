@@ -39,7 +39,7 @@ public class PaymentCardController {
         return ResponseEntity.ok().body(responseDto);
     }
 
-    @PatchMapping("/{id}/status")
+    @PatchMapping("/{id}")
     public ResponseEntity<Void> updateCardStatus(@PathVariable Long id, @RequestBody StatusDto dto) {
         service.updateCardStatus(id, dto.isStatus());
         return ResponseEntity.noContent().build();
