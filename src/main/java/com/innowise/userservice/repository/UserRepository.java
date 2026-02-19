@@ -8,7 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface UserRepository
@@ -21,4 +23,8 @@ public interface UserRepository
     int updateActiveStatus(@Param("id") Long id, @Param("active") boolean active);
 
     Optional<User> findByIdAndActiveTrue(Long id);
+
+    Optional<User> findByEmailAndActiveTrue(String email);
+
+    List<User> findAllByEmailInAndActiveTrue(Set<String> emails);
 }

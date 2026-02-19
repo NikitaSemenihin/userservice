@@ -10,12 +10,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public interface UserService {
 
     UserResponseDto createUser(UserCreateDto dto);
 
     UserResponseDto findUser(Long id);
+
+    UserResponseDto findUserByEmail(String email);
+
+    Map<String, UserResponseDto> findUsersByEmails(Set<String> emails);
 
     Page<UserResponseDto> findUsersWithSpecification(Specification<User> specification, Pageable pageable);
 
