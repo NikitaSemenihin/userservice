@@ -23,7 +23,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -63,6 +67,34 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException(String.format("User with id: %d Not Found", id)));
 
         return userMapper.toDto(user);
+    }
+
+    @Override
+    public UserResponseDto findUserByEmail(String email) {
+        User user = userRepository.findByEmailAndActiveTrue(email)
+                .orElseThrow(() -> new UserNotFoundException(String.format("User with email: %s Not Found", email)));
+        return userMapper.toDto(user);
+    }
+
+    @Override
+    public Map<String, UserResponseDto> findUsersByEmails(Set<String> emails) {
+        List<User> users = userRepository.findAllByEmailInAndActiveTrue(emails);
+        Set<String> foundEmails = users.stream()
+                .map(User::getEmail)
+                .collect(Collectors.toSet());
+
+        Set<String> missingEmails = new HashSet<>(emails);
+        missingEmails.removeAll(foundEmails);
+
+        if (!missingEmails.isEmpty()) {
+            throw new UserNotFoundException(String.format("Users not found for emails:%s ", missingEmails));
+        }
+
+        return users.stream()
+                .collect(Collectors.toMap(
+                        User::getEmail,
+                        userMapper::toDto
+                ));
     }
 
     @Override

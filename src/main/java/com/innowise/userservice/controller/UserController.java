@@ -9,6 +9,7 @@ import com.innowise.userservice.model.entity.User;
 import com.innowise.userservice.repository.specification.UserSpecification;
 import com.innowise.userservice.service.UserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -18,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/users")
@@ -44,7 +47,18 @@ public class UserController {
         return ResponseEntity.ok(service.findUser(id));
     }
 
-    @GetMapping
+    @GetMapping(params = "email")
+    public ResponseEntity<UserResponseDto> findUserByEmail(@RequestParam @Email String email) {
+        return ResponseEntity.ok(service.findUserByEmail(email));
+    }
+
+    @PostMapping("/emails")
+    public ResponseEntity<Map<String, UserResponseDto>> findUsersByEmails(@Valid @RequestBody Set<@Email String> emails) {
+        Map<String, UserResponseDto> result = service.findUsersByEmails(emails);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping(params = "!email")
     public ResponseEntity<Page<UserResponseDto>> findUsers(@RequestParam(required = false) String name,
                                                            @RequestParam(required = false) String surname,
                                                            Pageable pageable) {
