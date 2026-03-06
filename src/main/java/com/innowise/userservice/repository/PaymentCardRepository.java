@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Repository
 public interface PaymentCardRepository extends JpaRepository<PaymentCard, Long>,
@@ -18,6 +20,8 @@ public interface PaymentCardRepository extends JpaRepository<PaymentCard, Long>,
     List<PaymentCard> findAllByUserIdAndActiveTrue(Long userId);
 
     Optional<PaymentCard> findByIdAndActiveTrue(Long cardId);
+
+    Page<PaymentCard> findAllByUserIdAndActiveTrue(Long userId, Pageable pageable);
 
     @Modifying
     @Query(

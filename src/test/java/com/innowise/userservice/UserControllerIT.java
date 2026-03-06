@@ -58,12 +58,15 @@ class UserControllerIT {
                 """;
 
         mockMvc.perform(post("/api/users")
+                        .header("X-Service-Name", "authservice")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(userJson))
                 .andExpect(status().isCreated());
 
-        mockMvc.perform(get("/api/users/1"))
+        mockMvc.perform(get("/api/users/1")
+                        .header("X-User-Id", "1")
+                        .header("X-User-Role", "USER"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value("john@example.com"));
     }

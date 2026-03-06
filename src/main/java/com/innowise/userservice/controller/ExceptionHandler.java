@@ -2,9 +2,12 @@ package com.innowise.userservice.controller;
 
 import com.innowise.userservice.exception.CardLimitExceedException;
 import com.innowise.userservice.exception.CardNotFoundException;
+import com.innowise.userservice.exception.ForbiddenException;
+import com.innowise.userservice.exception.UnauthorizedException;
 import com.innowise.userservice.exception.UserNotFoundException;
 import com.innowise.userservice.model.dto.error.ErrorResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -30,7 +33,8 @@ public class ExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler(CardLimitExceedException.class)
     public ResponseEntity<ErrorResponseDto> handleCardLimitExceeded(CardLimitExceedException ex,
                                                                     HttpServletRequest request) {
-        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request.getRequestURI());    }
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request.getRequestURI());
+    }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDto> handleValidation(MethodArgumentNotValidException ex,
@@ -54,13 +58,29 @@ public class ExceptionHandler {
         );
     }
 
+    @org.springframework.web.bind.annotation.ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponseDto> handleDataIntegrity(DataIntegrityViolationException ex,
+                                                                HttpServletRequest request) {
+        return buildResponse(HttpStatus.CONFLICT, "User with this email already exists", request.getRequestURI());
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorResponseDto> handleUnauthorized(UnauthorizedException ex, HttpServletRequest request) {
+        return buildResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(), request.getRequestURI());
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ErrorResponseDto> handleForbidden(ForbiddenException ex, HttpServletRequest request) {
+        return buildResponse(HttpStatus.FORBIDDEN, ex.getMessage(), request.getRequestURI());
+    }
+
     @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleGeneric(Exception ex, HttpServletRequest request) {
         return buildResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "Invalid server error",
                 request.getRequestURI()
-                );
+        );
     }
 
     private ResponseEntity<ErrorResponseDto> buildResponse(
