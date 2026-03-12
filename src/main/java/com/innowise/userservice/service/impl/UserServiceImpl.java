@@ -118,7 +118,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto updateUser(Long id, UserCreateDto dto) {
         User user = userRepository.findByIdAndActiveTrue(id)
                 .orElseThrow(() -> new UserNotFoundException(
-                        String.format("User with id: %d not found".formatted(id))
+                        String.format("User with id: %d not found",id)
                 ));
 
         user.setName(dto.getName());

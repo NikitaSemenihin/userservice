@@ -56,6 +56,12 @@ public class UserController {
         return ResponseEntity.ok(service.findUser(id));
     }
 
+    @GetMapping("/internal/{id}")
+    public ResponseEntity<UserResponseDto> findUserInternal(HttpServletRequest request, @PathVariable Long id) {
+        accessPolicyService.requireService(request, "orderservice");
+        return ResponseEntity.ok(service.findUser(id));
+    }
+
     @GetMapping(params = "email")
     public ResponseEntity<UserResponseDto> findUserByEmail(HttpServletRequest request, @RequestParam @Email String email) {
         accessPolicyService.requireService(request, "orderservice");

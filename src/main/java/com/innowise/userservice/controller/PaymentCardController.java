@@ -33,12 +33,13 @@ public class PaymentCardController {
 
     @GetMapping
     public ResponseEntity<Page<PaymentCardResponseDto>> findCards(HttpServletRequest request, Pageable pageable) {
+        var context = accessPolicyService.requireContext(request);
         Page<PaymentCardResponseDto> page;
-        if (accessPolicyService.requireContext(request).isAdmin()) {
+        if (context.isAdmin()) {
             page = service.findActiveCards(pageable);
         } else {
             accessPolicyService.requireUserOrAdmin(request);
-            Long requesterId = accessPolicyService.requireContext(request).userId();
+            Long requesterId = context.userId();
             page = service.findActiveCardsByUserId(requesterId, pageable);
         }
         return ResponseEntity.ok(page);

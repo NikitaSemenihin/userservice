@@ -61,7 +61,7 @@ public class ExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponseDto> handleDataIntegrity(DataIntegrityViolationException ex,
                                                                 HttpServletRequest request) {
-        return buildResponse(HttpStatus.CONFLICT, "User with this email already exists", request.getRequestURI());
+        return buildResponse(HttpStatus.CONFLICT, ex.getMessage(), request.getRequestURI());
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(UnauthorizedException.class)
