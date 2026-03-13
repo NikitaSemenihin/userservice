@@ -18,10 +18,10 @@ services:
   app:
     build: .
     ports:
-      - "8081:8081"
+      - "8082:8082"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - DB_URL=jdbc:postgresql://db:5432/user_db
+      - DB_URL=jdbc:postgresql://db:5432/userservice
       - DB_USERNAME=user
       - DB_PASSWORD=pass
       - REDIS_HOST=redis

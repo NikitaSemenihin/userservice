@@ -31,11 +31,15 @@ public interface UserService {
 
     void deleteUser(Long id);
 
+    void deleteUserHard(Long id);
+
     PaymentCardResponseDto addCard(Long userId, PaymentCardCreateDto dto);
 
     PaymentCardResponseDto findCard(Long cardId);
 
     Page<PaymentCardResponseDto> findActiveCards(Pageable pageable);
+
+    Page<PaymentCardResponseDto> findActiveCardsByUserId(Long userId, Pageable pageable);
 
     List<PaymentCardResponseDto> findUserCards(Long userId);
 
